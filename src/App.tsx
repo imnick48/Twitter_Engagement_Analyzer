@@ -53,24 +53,29 @@ function App() {
             <h2 className="text-2xl font-semibold text-gray-800">Analytics</h2>
           </div>
           <div className="h-[400px] flex items-end justify-around gap-4 p-4">
-            {data.result.map((value, index) => {
-              const height = (value * 100).toFixed(2);
-              return (
-                <div key={index} className="relative group w-full h-full flex flex-col justify-end">
-                  <div
-                    className="w-full bg-blue-500 hover:bg-blue-600 rounded-t-lg transition-all duration-300 cursor-pointer"
-                    style={{ height: `${height}%` }}
-                  >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      {height}%
+            {(() => {
+              const totalSum = data.result.reduce((sum, val) => sum + val, 0);
+              const categories = ["Irrelevant", "Neutral", "Negative", "Positive"];
+              
+              return data.result.map((value, index) => {
+                const percentage = totalSum === 0 ? 0 : (value / totalSum * 100).toFixed(2);
+                return (
+                  <div key={index} className="relative group w-full h-full flex flex-col justify-end">
+                    <div
+                      className="w-full bg-blue-500 hover:bg-blue-600 rounded-t-lg transition-all duration-300 cursor-pointer"
+                      style={{ height: `${percentage}%` }}
+                    >
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        {percentage}%
+                      </div>
+                    </div>
+                    <div className="text-center mt-2 text-sm text-gray-600">
+                      {categories[index] || `Category ${index + 1}`}
                     </div>
                   </div>
-                  <div className="text-center mt-2 text-sm text-gray-600">
-                    Category {index + 1}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              });
+            })()}
           </div>
         </div>
       </div>
